@@ -44,10 +44,10 @@ const  LibUser = {
   */  
   addUser :async function(req: any){
     try {
-console.log(req.body);
-      const body = req.body;
+//console.log(req);
+      const body = req;
       const hashed_password = LibCrypto.encode(body.password);
-console.log(hashed_password);
+//console.log(hashed_password);
       const text = `
       INSERT INTO public."User" (name, email, "password", "createdAt", "updatedAt") 
       VALUES($1, $2, $3, current_timestamp, current_timestamp) RETURNING *
@@ -75,9 +75,9 @@ console.log(hashed_password);
   validUser :async function(req: any)
   {
     try{
-//console.log(req.body);
+//console.log(req);
       const retArr = { ret: LibConfig.NG_CODE, data: {}}
-      const body = req.body;
+      const body = req;
       //User
       const text = `
       SELECT * FROM public."User" where email = '${body.email}'
@@ -108,5 +108,3 @@ console.log(hashed_password);
 }
 export default LibUser;
 
-/*
-*/

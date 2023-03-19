@@ -1,4 +1,4 @@
-import LibLogin from '../../lib/LibLogin';
+import LibBasicLogin from '../../lib/LibBasicLogin';
 
 const Login = {
   /**
@@ -13,8 +13,8 @@ const Login = {
       console.log("#startProc: Login");
       //btn
       const button: any = document.querySelector('#btn_login');
-      button.addEventListener('click', async () => {
-        const res = await LibLogin.login();
+      button.addEventListener('click', () => {
+        LibBasicLogin.login();
       });    
     } catch (e) {
       console.error(e);

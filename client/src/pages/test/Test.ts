@@ -15,6 +15,7 @@ const Test = {
 console.log("valid=", valid);
       if(valid === false) {
         alert("NG, valid Login");
+        location.href = '/login';
       }
     } catch (e) {
       console.error(e);

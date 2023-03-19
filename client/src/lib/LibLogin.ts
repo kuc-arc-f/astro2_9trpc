@@ -1,9 +1,7 @@
 import LibConfig from './LibConfig';
-import LibCookie from './LibCookie';
+import LibDbSession from './LibDbSession';
+import { trpc } from '../utils/trpc';
 //
-const PUBLIC_BASIC_AUTH_USER = import.meta.env.PUBLIC_BASIC_AUTH_USER;
-const PUBLIC_BASIC_AUTH_PASSWORD = import.meta.env.PUBLIC_BASIC_AUTH_PASSWORD;
-
 const LibLogin = {
   /**
   * login
@@ -13,22 +11,27 @@ const LibLogin = {
   */ 
   login : async function () {
     try {
-//console.log("PUBLIC_BASIC_AUTH_USER=", PUBLIC_BASIC_AUTH_USER);
+      let ret = false;
       const password = document.querySelector<HTMLInputElement>('#password');
-      const user_name = document.querySelector<HTMLInputElement>('#user_name');
-console.log(user_name?.value);
-console.log(password?.value);
-      if(
-          PUBLIC_BASIC_AUTH_USER === user_name?.value && 
-          PUBLIC_BASIC_AUTH_PASSWORD === password?.value
-      ) 
-      {
-          const key = LibConfig.COOKIE_KEY_AUTH;
-          LibCookie.set_cookie(key, "1");
-          window.location.href = '/';
-      } else {
-          alert("Error, Login");
+      const email = document.querySelector<HTMLInputElement>('#email');
+      const item = {
+        email: email?.value,
+        password: password?.value,
       }
+//console.log(item); 
+      const user:any = await trpc.user.login.mutate(item);
+//console.log(user);
+      if(user.ret !== LibConfig.OK_CODE) {
+        console.error("error, trpc.user.login");
+        alert("Error, login");
+        throw new Error("error, trpc.user.login");
+      }
+      const key = LibConfig.SESSION_KEY_USER;     
+      user.password = "";     
+      await LibDbSession.set(key, user.data);
+      window.location.href = '/';	
+      ret = true;
+      return ret;
     } catch (error) {
         console.error(error);
     }     

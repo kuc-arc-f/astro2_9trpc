@@ -14,13 +14,14 @@ console.log("#Layout.startProc");
     let ret = false;
     const parsedUrl = new URL(window.location.href);
 //console.log(parsedUrl);
-    if(parsedUrl.pathname !== '/login') {
+    if(!(parsedUrl.pathname === '/login' || parsedUrl.pathname === '/basic_login')) 
+    {
 console.log("pathname=", parsedUrl.pathname);
       const key = LibConfig.COOKIE_KEY_AUTH;
       const auth = LibCookie.get_cookie(key);
       if(typeof auth === "undefined" || auth === null)
       {
-        location.href = '/login';
+        location.href = '/basic_login';
       }
       console.log(key, auth);      
     }

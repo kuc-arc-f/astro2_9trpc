@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { router, publicProcedure } from '../trpc';
+//LibUser
+import LibUser from '../lib/LibUser';
 //
 //type
 interface User {
@@ -41,23 +43,50 @@ export const userRouter = router({
     return user;
   }),
   /**
-   * userCreate
+   *
    * @param
    *
    * @return
    */   
   userCreate: publicProcedure
-  .input(z.object({ name: z.string() }))
-  .mutation((req) => {
-    //const id = `${Math.random()}`;
-    const id =  Math.floor(Math.random() * 1000 * 1000);
-    const user: User = {
-      id: String(id),
+  .input(z.object({
+    name: z.string(),
+    password: z.string(),
+    email: z.string(),
+  }))
+  .mutation(async (req) => {
+  //console.log(req.input.title);
+    const item = {
       name: req.input.name,
-    };
-console.log(user);
-    userList.push(user);
-    return user;
+      password: req.input.password,
+      email: req.input.email,
+    }
+console.log(item);
+    const result = await LibUser.addUser(item);
+  console.log(result);
+    return result;
+  }),
+  /**
+   *
+   * @param
+   *
+   * @return
+   */   
+  login: publicProcedure
+  .input(z.object({
+    password: z.string(),
+    email: z.string(),
+  }))
+  .mutation(async (req) => {
+  //console.log(req.input.title);
+    const item = {
+      password: req.input.password,
+      email: req.input.email,
+    }
+console.log(item);
+    const result = await LibUser.validUser(item);
+console.log(result);
+    return result;
   }),
   /**
    * getUserList
